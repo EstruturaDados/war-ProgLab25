@@ -63,3 +63,99 @@ int main(){
 
     return 0;
 }
+
+//=============================================================
+// IMPLEMENTAÇÃO DAS FUNÇÕES
+//=============================================================
+
+// REQUISITO: Usar calloc /malloc para alocação dinâmica.
+Territorio* alocacar_mapa(int tamanho){
+    //Usar para alocar mémoria e inicializar todos os campos com 0.
+    Territorio* novo_mapa = (Territorio*) calloc(tamanho, sizeof(Territorio));
+
+    if (novo_mapa == NULL){
+        printf("ERRO FATAL: Falha na locação de mémoria (calloc).\n");
+        return NULL;
+    }
+    printf("Mémoria alocada dinamicamente para %d territórios.\n", tamanho);
+    return novo_mapa;
+}
+
+// REQUISITOS: Implementação das rotinas de cadastro.
+void cadastrar_territorios(Territorio* mapa, int tamanho){
+    for(int i = 0; i < tamanho; i++){
+        printf("\n --- Cadastro do Território %d de %d ---\n", i + 1, tamanho);
+
+    // Entrada do Nome: '->' para ponteiros
+    printf("Nome do Território: ");
+    fgets((mapa + i)->nome, sizeof((mapa + i)->nome), stdin);
+    (mapa + i)->nome[strcspn((mapa + i)->nome, "\n")] = '\0'; 
+
+    // Entrada da Cor
+    printf("Cor do Exército dominante: ");
+    fgets((mapa + i)->cor, sizeof((mapa + i)->cor), stdin);
+    (mapa + i)->cor[strcspn((mapa + i)->cor, "\n")] = '\0';
+
+    // Entrada do Número de Tropas
+    printf("Número de Tropas presentes: ");
+    // O  & antes do campo das 'tropas' 
+    scanf("%d", &((mapa + i)->tropas));
+
+    while(getchar() != '\n'); // Limpar buffer do teclado
+    }
+
+}
+// REQUISITO: Implementação da lógica de ataque.
+void atacar(Territorio* atacante, Territorio* defensor){
+    printf("[BATALHA] %s (%s) vs %s (%s)\n", atacante->nome, atacante->cor, defensor->nome, defensor->cor);
+    printf("Tropas: Atacante %d | Defensor %d\n", atacante->tropas, defensor->tropas);
+
+    // Simulação do dado (Número aleatório entre 1 e 6)
+    int dado_atacante = (rand() % 6) + 1;
+    int dado_defensor = (rand() % 6) + 1;
+
+    printf("Dados: Atacante %d | Defensor %d\n", dado_atacante, dado_defensor);
+    //Lógica de vitória (Atacante vence)
+    if(dado_atacante > dado_defensor){
+        printf(">>> O ATACANTE %s VENCEU! <<<\n", atacante->nome);
+
+    // REQUISITO: Transfere a cor (defensor muda de dono).
+        strcpy(defensor->cor, atacante->cor);
+
+    // REQUISITOS: Transfere metade das tropas do defensor para o atacante.
+       int tropas_transferidas = defensor->tropas / 2;
+       atacante->tropas += tropas_transferidas;
+       defensor->tropas -= tropas_transferidas; 
+
+       printf(" -> %d tropas transferidas . Novo Dono: %s\n", tropas_transferidas, defensor->cor);
+    }
+    // Lógica de Derrota (Defensor vence)
+    else {
+        printf(" >>> O DEFENSOR %s VENCEU! <<<\n", defensor->nome);
+
+        // REQUISITO: O atacante perde UMA tropa.
+        if(atacante->tropas > 0){
+           atacante->tropas -= 1;
+           printf(" -> %s perdeu 1 tropa na falha do ataque.\n", atacante->nome);
+    }
+}
+}
+// Função utilitária para exibir o estado do mapa.
+void exibir_mapa(Territorio* mapa, int tamanho){
+   printf("================================================\n");
+   for(int i = 0; i < tamanho; i++){
+    printf("Território %d:\n", i + 1);
+    // Acessar os campos usando '->' para ponteiros
+    printf("  >  Nome: %s\n", (mapa + i)->nome);
+    printf("  >  Cor: %s\n", (mapa + i)->cor);
+    printf("  >  Tropas: %d\n", (mapa + i)->tropas);
+    printf("----------------------------------------------\n");
+   }
+}
+// REQUISITO: Função void liberarMemoria (Território* mapa) para liberar o espaço alocado.
+void liberarMemoria(Territorio* mapa){
+    if (mapa !=NULL){
+        free(mapa);
+        printf("Mémoria liberada com sucesso.\n");
+    }
+}

@@ -1,7 +1,7 @@
-#include <stdio.h>  // Entrada/Saída
+#include <stdio.h>  // Entrada/Saída fegts, printf, scanf
 #include <string.h> // Manipulação de strings
 
-//--- Definição da estrutura 'Território' ---
+//--- Definição da estrutura 'Território' ---            
 typedef struct {
     char nome[50]; // Nome do território
     char cor_exercito[20]; // Cor do exército dominante
@@ -49,12 +49,7 @@ for(int i = 0; i < NUM_TERRITORIOS; i++){
         printf("  >  Tropas: %d\n", mapa[i].num_tropas);
         printf("----------------------------------------------\n");
     }
-
-
-
-
-
-    
+  
 
     return 0;
 }

@@ -82,5 +82,28 @@ int main() {
             while (getchar() != '\n');
         }
 
-    }
-  
+        switch (escolha_usuario){
+            case 1: {
+                // Rotina de Ataque
+                int atacante_idx, defensor_idx;
+                
+                printf("\n--- FASE DE ATAQUE ---\n");
+                atacante_idx = ler_indice_territorio("Escolha o território ATACANTE (número): ", num_territorios);
+                defensor_idx = ler_indice_territorio("Escolha o território DEFENSOR (número): ", num_territorios);
+                
+                // Validação de Ataque (Atacante != Defensor, Atacante > 1 tropa)
+                if (atacante_idx == defensor_idx) {
+                    printf("AVISO: Você não pode atacar a si mesmo!\n");
+                } else if (mapa[atacante_idx].tropas < 2) {
+                    printf("AVISO: Território atacante precisa de pelo menos 2 tropas.\n");
+                } 
+                // Validação Principal: Não atacar o próprio território
+                else if (strcmp(mapa[atacante_idx].cor, mapa[defensor_idx].cor) == 0) {
+                    printf("AVISO: Você não pode atacar um território da sua própria cor (%s).\n", mapa[atacante_idx].cor);
+                } 
+                else {
+                    atacar(&mapa[atacante_idx], &mapa[defensor_idx]);
+                }
+                break;
+            }
+        
